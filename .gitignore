@@ -1,0 +1,7 @@
+ipch/
+nightly build/
+
+ThreadInitializer.sdf
+ThreadInitializer.v11.suo
+
+*.aps
