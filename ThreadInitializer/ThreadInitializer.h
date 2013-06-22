@@ -1,6 +1,8 @@
 #ifndef _THREADINITIALIZER_
 #define _THREADINITIALIZER_
 
+#if (_WIN32_WINNT >= 0x0600)
+
 typedef void (CALLBACK *LPTHREAD_INITIALIZER_ROUTINE) (LPVOID Context);
 typedef void (CALLBACK *LPTHREAD_INITIALIZER_CLEANUP) (LPVOID Context);
 
@@ -26,5 +28,7 @@ AddThreadInitializerEx(
 #ifdef __cplusplus
 }
 #endif
+
+#endif // (_WIN32_WINNT >= 0x0600)
 
 #endif /* _THREADINITIALIZER_ */
