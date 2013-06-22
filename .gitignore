@@ -2,6 +2,7 @@ ipch/
 nightly build/
 
 ThreadInitializer.sdf
+ThreadInitializer.opensdf
 ThreadInitializer.v11.suo
 
 *.aps
