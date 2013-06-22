@@ -1,0 +1,4 @@
+LIBRARY "ThreadInitializer"
+EXPORTS
+	AddThreadInitializer	@1
+	AddThreadInitializerEx	@2
