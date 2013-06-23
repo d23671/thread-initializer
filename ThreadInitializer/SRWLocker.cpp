@@ -1,49 +1,22 @@
 #include "stdafx.h"
 #include "SRWLocker.h"
 
-SRWLocker::SRWLocker(SRWLOCK &SRW, BOOL Lock, BOOL LockExclusive) :
-	SRW(SRW),
-	Lock(LOCK::NONE)
+void SRWLockExclusive::Lock(SRWLOCK &SRW)
 {
-	if (!Lock)
-		return;
-
-	if (LockExclusive)
-		this->LockExclusive();
-	else
-		this->LockShared();
+	::AcquireSRWLockExclusive(&SRW);
 }
 
-SRWLocker::~SRWLocker()
+void SRWLockExclusive::Unlock(SRWLOCK &SRW)
 {
-	Unlock();
+	::ReleaseSRWLockExclusive(&SRW);
 }
 
-void SRWLocker::LockExclusive()
+void SRWLockShared::Lock(SRWLOCK &SRW)
 {
-	_ASSERTE(this->Lock == LOCK::NONE);
-	::AcquireSRWLockExclusive(&this->SRW);
-	this->Lock = LOCK::EXCLUSIVE;
+	::AcquireSRWLockShared(&SRW);
 }
 
-void SRWLocker::LockShared()
+void SRWLockShared::Unlock(SRWLOCK &SRW)
 {
-	_ASSERTE(this->Lock == LOCK::NONE);
-	::AcquireSRWLockShared(&this->SRW);
-	this->Lock = LOCK::SHARED;
-}
-
-void SRWLocker::Unlock()
-{
-	switch (this->Lock)
-	{
-	case LOCK::SHARED:
-		::ReleaseSRWLockShared(&this->SRW);
-		break;
-	case LOCK::EXCLUSIVE:
-		::ReleaseSRWLockExclusive(&this->SRW);
-		break;
-	}
-
-	this->Lock = LOCK::NONE;
+	::ReleaseSRWLockShared(&SRW);
 }

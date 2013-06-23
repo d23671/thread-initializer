@@ -1,24 +1,36 @@
 #pragma once
 
+template<class Lock>
 class SRWLocker
 {
 public:
-	SRWLocker(SRWLOCK &SRW, BOOL Lock = TRUE, BOOL LockExclusive = FALSE);
-	~SRWLocker();
-public:
-	void LockExclusive();
-	void LockShared();
-	void Unlock();
-private:
-	enum class LOCK
+	SRWLocker(SRWLOCK &SRW) :
+		SRW(SRW)
 	{
-		NONE,
-		SHARED,
-		EXCLUSIVE
-	};
+		Lock::Lock(this->SRW);
+	}
+
+	~SRWLocker()
+	{
+		Lock::Unlock(this->SRW);
+	}
 private:
 	SRWLOCK &SRW;
-	LOCK Lock;
 private:
-	SRWLocker & operator=(const SRWLocker &source);
+	SRWLocker(const SRWLocker<Lock> &source);
+	SRWLocker<Lock> & operator=(const SRWLocker<Lock> &source);
+};
+
+class SRWLockExclusive
+{
+public:
+	static void Lock(SRWLOCK &SRW);
+	static void Unlock(SRWLOCK &SRW);
+};
+
+class SRWLockShared
+{
+public:
+	static void Lock(SRWLOCK &SRW);
+	static void Unlock(SRWLOCK &SRW);
 };
