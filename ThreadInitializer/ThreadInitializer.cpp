@@ -12,7 +12,7 @@ BOOL WINAPI AddThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine
 
 BOOL WINAPI AddThreadInitializerEx(LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine, LPTHREAD_INITIALIZER_CLEANUP CleanupRoutine, LPVOID Context)
 {
-	INITIALIZER_INFO handlersInfo;
+	INITIALIZER_INFO InitializerInfo;
 
 	if (InitializerRoutine == nullptr)
 	{
@@ -20,15 +20,15 @@ BOOL WINAPI AddThreadInitializerEx(LPTHREAD_INITIALIZER_ROUTINE InitializerRouti
 		return FALSE;
 	}
 
-	ZeroMemory(&handlersInfo, sizeof(handlersInfo));
+	ZeroMemory(&InitializerInfo, sizeof(InitializerInfo));
 
-	handlersInfo.Initializer = InitializerRoutine;
-	handlersInfo.Cleaner = CleanupRoutine;
-	handlersInfo.Context = Context;
+	InitializerInfo.Initializer = InitializerRoutine;
+	InitializerInfo.Cleaner = CleanupRoutine;
+	InitializerInfo.Context = Context;
 
 	SRWLocker<SRWLockExclusive> Locker(InitializersInfoMutex);
 
-	InitializersInfo.push_back(handlersInfo);
+	InitializersInfo.push_back(InitializerInfo);
 
 	return TRUE;
 }
