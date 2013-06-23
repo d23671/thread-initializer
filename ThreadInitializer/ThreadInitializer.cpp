@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "SRWLocker.h"
 #include "ThreadInitializer.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,4 +31,32 @@ BOOL WINAPI AddThreadInitializerEx(LPTHREAD_INITIALIZER_ROUTINE InitializerRouti
 	ReleaseSRWLockExclusive(&g_srwHandlers);
 
 	return TRUE;
+}
+
+BOOL WINAPI RemoveThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine, BOOL DoCleanup)
+{
+	if (InitializerRoutine == nullptr)
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return FALSE;
+	}
+
+	{
+		SRWLocker<SRWLockExclusive> Locker(g_srwHandlers);
+
+		for (std::list<HANDLERSINFO>::const_iterator Iterator = g_handlers.begin(); Iterator != g_handlers.end(); Iterator++)
+		{
+			if (Iterator->pfnInitializer != InitializerRoutine)
+				continue;
+
+			if (DoCleanup && Iterator->pfnCleanup != nullptr)
+				Iterator->pfnCleanup(Iterator->lpContext);
+
+			g_handlers.erase(Iterator);
+			return TRUE;
+		}
+	}
+
+	SetLastError(ERROR_FILE_NOT_FOUND);
+	return FALSE;
 }

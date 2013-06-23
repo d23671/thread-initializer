@@ -25,6 +25,13 @@ AddThreadInitializerEx(
 	LPVOID Context
 	);
 
+BOOL
+WINAPI
+RemoveThreadInitializer(
+	LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine,
+	BOOL DoCleanup
+	);
+
 #ifdef __cplusplus
 }
 #endif
