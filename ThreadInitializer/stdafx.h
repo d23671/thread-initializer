@@ -10,6 +10,10 @@
 
 #include <windows.h>
 
+// Visual C++ Header Files:
+
+#include <crtdbg.h>
+
 // C++ Header Files:
 
 #include <list>
