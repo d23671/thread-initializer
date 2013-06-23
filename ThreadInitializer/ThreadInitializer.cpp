@@ -26,9 +26,9 @@ BOOL WINAPI AddThreadInitializerEx(LPTHREAD_INITIALIZER_ROUTINE InitializerRouti
 	handlersInfo.Cleaner = CleanupRoutine;
 	handlersInfo.Context = Context;
 
-	AcquireSRWLockExclusive(&InitializersInfoMutex);
+	SRWLocker<SRWLockExclusive> Locker(InitializersInfoMutex);
+
 	InitializersInfo.push_back(handlersInfo);
-	ReleaseSRWLockExclusive(&InitializersInfoMutex);
 
 	return TRUE;
 }
