@@ -24,14 +24,14 @@
 
 // Types Definition:
 
-struct HANDLERSINFO
+struct INITIALIZER_INFO
 {
-	LPTHREAD_INITIALIZER_ROUTINE pfnInitializer;
-	LPTHREAD_INITIALIZER_CLEANUP pfnCleanup;
-	LPVOID lpContext;
+	LPTHREAD_INITIALIZER_ROUTINE Initializer;
+	LPTHREAD_INITIALIZER_CLEANUP Cleaner;
+	LPVOID Context;
 };
 
 // Global Variables:
 
 extern SRWLOCK g_srwHandlers;
-extern std::list<HANDLERSINFO> g_handlers;
+extern std::list<INITIALIZER_INFO> g_handlers;

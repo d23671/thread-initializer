@@ -12,7 +12,7 @@ BOOL WINAPI AddThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine
 
 BOOL WINAPI AddThreadInitializerEx(LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine, LPTHREAD_INITIALIZER_CLEANUP CleanupRoutine, LPVOID Context)
 {
-	HANDLERSINFO handlersInfo;
+	INITIALIZER_INFO handlersInfo;
 
 	if (InitializerRoutine == nullptr)
 	{
@@ -22,9 +22,9 @@ BOOL WINAPI AddThreadInitializerEx(LPTHREAD_INITIALIZER_ROUTINE InitializerRouti
 
 	ZeroMemory(&handlersInfo, sizeof(handlersInfo));
 
-	handlersInfo.pfnInitializer = InitializerRoutine;
-	handlersInfo.pfnCleanup = CleanupRoutine;
-	handlersInfo.lpContext = Context;
+	handlersInfo.Initializer = InitializerRoutine;
+	handlersInfo.Cleaner = CleanupRoutine;
+	handlersInfo.Context = Context;
 
 	AcquireSRWLockExclusive(&g_srwHandlers);
 	g_handlers.push_back(handlersInfo);
@@ -44,13 +44,13 @@ BOOL WINAPI RemoveThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRout
 	{
 		SRWLocker<SRWLockExclusive> Locker(g_srwHandlers);
 
-		for (std::list<HANDLERSINFO>::const_iterator Iterator = g_handlers.begin(); Iterator != g_handlers.end(); Iterator++)
+		for (std::list<INITIALIZER_INFO>::const_iterator Iterator = g_handlers.begin(); Iterator != g_handlers.end(); Iterator++)
 		{
-			if (Iterator->pfnInitializer != InitializerRoutine)
+			if (Iterator->Initializer != InitializerRoutine)
 				continue;
 
-			if (DoCleanup && Iterator->pfnCleanup != nullptr)
-				Iterator->pfnCleanup(Iterator->lpContext);
+			if (DoCleanup && Iterator->Cleaner != nullptr)
+				Iterator->Cleaner(Iterator->Context);
 
 			g_handlers.erase(Iterator);
 			return TRUE;
