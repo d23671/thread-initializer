@@ -1,4 +1,4 @@
 #include "stdafx.h"
 
-SRWLOCK g_srwHandlers = SRWLOCK_INIT;
+SRWLOCK InitializersInfoMutex = SRWLOCK_INIT;
 std::list<INITIALIZER_INFO> InitializersInfo;

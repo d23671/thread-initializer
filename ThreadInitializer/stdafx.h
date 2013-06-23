@@ -33,5 +33,5 @@ struct INITIALIZER_INFO
 
 // Global Variables:
 
-extern SRWLOCK g_srwHandlers;
+extern SRWLOCK InitializersInfoMutex;
 extern std::list<INITIALIZER_INFO> InitializersInfo;
