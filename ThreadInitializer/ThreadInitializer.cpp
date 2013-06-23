@@ -27,7 +27,7 @@ BOOL WINAPI AddThreadInitializerEx(LPTHREAD_INITIALIZER_ROUTINE InitializerRouti
 	handlersInfo.Context = Context;
 
 	AcquireSRWLockExclusive(&g_srwHandlers);
-	g_handlers.push_back(handlersInfo);
+	InitializersInfo.push_back(handlersInfo);
 	ReleaseSRWLockExclusive(&g_srwHandlers);
 
 	return TRUE;
@@ -44,7 +44,7 @@ BOOL WINAPI RemoveThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRout
 	{
 		SRWLocker<SRWLockExclusive> Locker(g_srwHandlers);
 
-		for (std::list<INITIALIZER_INFO>::const_iterator Iterator = g_handlers.begin(); Iterator != g_handlers.end(); Iterator++)
+		for (std::list<INITIALIZER_INFO>::const_iterator Iterator = InitializersInfo.begin(); Iterator != InitializersInfo.end(); Iterator++)
 		{
 			if (Iterator->Initializer != InitializerRoutine)
 				continue;
@@ -52,7 +52,7 @@ BOOL WINAPI RemoveThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRout
 			if (DoCleanup && Iterator->Cleaner != nullptr)
 				Iterator->Cleaner(Iterator->Context);
 
-			g_handlers.erase(Iterator);
+			InitializersInfo.erase(Iterator);
 			return TRUE;
 		}
 	}
