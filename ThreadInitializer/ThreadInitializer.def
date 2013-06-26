@@ -1,5 +1,6 @@
 LIBRARY "ThreadInitializer"
 EXPORTS
-	AddThreadInitializer	@1
-	AddThreadInitializerEx	@2
-	RemoveThreadInitializer	@3
+	AddThreadInitializer		@1
+	AddThreadInitializerEx		@2
+	RemoveThreadInitializer		@3
+	RemoveAllThreadInitializer	@4

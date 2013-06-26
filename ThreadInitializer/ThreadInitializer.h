@@ -25,6 +25,12 @@ AddThreadInitializerEx(
 	LPVOID Context
 	);
 
+void
+WINAPI
+RemoveAllThreadInitializer(
+	VOID
+	);
+
 BOOL
 WINAPI
 RemoveThreadInitializer(

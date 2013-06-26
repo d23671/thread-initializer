@@ -33,6 +33,19 @@ BOOL WINAPI AddThreadInitializerEx(LPTHREAD_INITIALIZER_ROUTINE InitializerRouti
 	return TRUE;
 }
 
+void WINAPI RemoveAllThreadInitializer(VOID)
+{
+	SRWLocker<SRWLockExclusive> Locker(InitializersInfoMutex);
+
+	for (std::list<INITIALIZER_INFO>::const_reverse_iterator Iterator = InitializersInfo.rbegin(); Iterator != InitializersInfo.rend(); Iterator++)
+	{
+		if (Iterator->Cleaner != nullptr)
+			Iterator->Cleaner(Iterator->Context);
+	}
+
+	InitializersInfo.clear();
+}
+
 BOOL WINAPI RemoveThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine, BOOL DoCleanup)
 {
 	if (InitializerRoutine == nullptr)
