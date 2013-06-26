@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "SRWLocker.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Entry Point
@@ -7,10 +8,13 @@ BOOL APIENTRY DllMain(HMODULE /* hModule */, DWORD ul_reason_for_call, LPVOID /*
 {
 	switch (ul_reason_for_call)
 	{
-	case DLL_PROCESS_ATTACH:
 	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
-	case DLL_PROCESS_DETACH:
+		{
+			SRWLocker<SRWLockShared> Locker(InitializersInfoMutex);
+
+			for (std::list<INITIALIZER_INFO>::const_iterator Iterator = InitializersInfo.begin(); Iterator != InitializersInfo.end(); Iterator++)
+				Iterator->Initializer(Iterator->Context);
+		}
 		break;
 	}
 
