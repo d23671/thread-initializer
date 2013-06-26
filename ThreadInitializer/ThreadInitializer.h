@@ -34,8 +34,7 @@ RemoveAllThreadInitializer(
 BOOL
 WINAPI
 RemoveThreadInitializer(
-	LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine,
-	BOOL DoCleanup
+	LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine
 	);
 
 #ifdef __cplusplus

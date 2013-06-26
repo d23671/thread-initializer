@@ -46,7 +46,7 @@ void WINAPI RemoveAllThreadInitializer(VOID)
 	InitializersInfo.clear();
 }
 
-BOOL WINAPI RemoveThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine, BOOL DoCleanup)
+BOOL WINAPI RemoveThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRoutine)
 {
 	if (InitializerRoutine == nullptr)
 	{
@@ -62,7 +62,7 @@ BOOL WINAPI RemoveThreadInitializer(LPTHREAD_INITIALIZER_ROUTINE InitializerRout
 			if (Iterator->Initializer != InitializerRoutine)
 				continue;
 
-			if (DoCleanup && Iterator->Cleaner != nullptr)
+			if (Iterator->Cleaner != nullptr)
 				Iterator->Cleaner(Iterator->Context);
 
 			InitializersInfo.erase(Iterator);
